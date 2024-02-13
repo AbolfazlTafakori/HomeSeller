@@ -2,8 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using HomeSeller.Data;
 using HomeSeller.Models;
 using HomeSeller.Models.ViewModel;
+using HomeSeller.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,20 +15,24 @@ namespace HomeSeller.Areas.Identity.Pages.Account
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<UserModel> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<UserModel> _userManager;
         private readonly IUserStore<UserModel> _userStore;
-
+        private readonly ApplicationDbContext _db;
 
         public RegisterModel(
             UserManager<UserModel> userManager,
             IUserStore<UserModel> userStore,
-            SignInManager<UserModel> signInManager)
-
+            SignInManager<UserModel> signInManager,
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext db)
+            
         {
             _userManager = userManager;
             _userStore = userStore;
             _signInManager = signInManager;
-
+            _roleManager = roleManager;
+            _db = db;
         }
 
 
@@ -55,6 +61,24 @@ namespace HomeSeller.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    if (!await _roleManager.RoleExistsAsync(Roles.Admin)) 
+                    { 
+                        await _roleManager.CreateAsync(new IdentityRole(Roles.Admin));
+                    }
+                    if (!await _roleManager.RoleExistsAsync(Roles.User))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole(Roles.User));
+                    }
+                    if (_db.Users.ToList().Count == 1) 
+                    {
+                        await _userManager.AddToRoleAsync(user, Roles.Admin);
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, Roles.User);
+                    }
+
+
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }

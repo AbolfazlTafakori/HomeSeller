@@ -6,7 +6,7 @@ namespace HomeSeller.Models.ViewModel
     public class EstateModel
     {
 
-        public int id { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "{0} نمیتواند خالی باشد")]
         [Display(Name ="عنوان")]

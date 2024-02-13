@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using HomeSeller.Models;
 
 namespace HomeSeller.Data
 {
@@ -9,5 +10,6 @@ namespace HomeSeller.Data
             : base(options)
         {
         }
+        public DbSet<UserModel> ApplicationUser { get; set; }
     }
 }

@@ -29,5 +29,10 @@ namespace HomeSeller.Models.ViewModel
         [MaxLength(600)]
         public string Address { get; set; }
 
+        #region Relation
+        public ICollection<EstateModel>? Estates { get; set; }
+        public int CategoryId { get; internal set; }
+        #endregion
+
     }
 }

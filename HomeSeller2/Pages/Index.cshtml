@@ -1,0 +1,61 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "خانه";
+}
+
+
+<h4 class="text-title"> به سایت <span class="span1">مشاورین املاک </span> <span class="span2"> </span> خوش آمدید !</h4>
+
+<!--    banner-->
+<div class="banner">
+    <img src="image/15.jpg" alt="">
+</div>
+<!--    end banner-->
+<!--    title-->
+<div class="title">
+    <h2> تازه ترین املاک  </h2>
+</div>
+<!--    end title-->
+<!--    products-->
+@if (Model.EstatesViewModel.Any())
+{
+    <div class="products row">
+        @foreach (var estate in Model.EstatesViewModel)
+        {
+            <div class="col-lg-4 col-md-6 col-12">
+                <a asp-page="EstateDetails" asp-route-Id="@estate.Id">
+                    <div class="product-card">
+                        <div class="image">
+                            <img src="~/image/Estates/@estate.Image" alt="product1">
+                        </div>
+                        <div class="card-body">
+                            <p class="d-flex justify-content-between">
+                                <span> @estate.Title </span>
+                                <span> @estate.Metrage متری </span>
+                            </p>
+                            <p class="mt-2 address">
+                                <i class="fas fa-map-marked-alt text-orange"></i>
+                                @estate.Address
+                            </p>
+                            <p class="my-2"> مبلغ : @estate.Price.ToToman() </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+
+    </div>
+    <h5 class="text-center mt-3">
+        <a href="/AllEstates">
+            مشاهده همه املاک
+        </a>
+    </h5>
+}
+else
+{
+    <h3 class="alert alert-info text-center"> ملکی موجود نیست! </h3>
+}
+<!--    end products-->
+
+<partial name="_Footer" />
